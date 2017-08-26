@@ -1,2 +1,2 @@
 # company-sonic-pi.el
-Emacs company backend for Sonic Pi
+Sonic Pi backend for Emacs company. Work in Progress.
