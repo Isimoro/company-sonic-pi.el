@@ -36,40 +36,49 @@
 (defvar company-sonic-pi-dict "~/.spacemacs.d/layers/sonic-pi/dic"
   "File with sonic pi words")
 
+(defvar company-sonic-pi-dict-list (read-lines company-sonic-pi-dict-file)
+  "List the expressions found in 'company-sonic-pi-dict'")
+
 (defun read-lines (filePath)
   "Return a list of lines of a file at filePath."
   (with-temp-buffer
     (insert-file-contents filePath)
     (split-string (buffer-string) "\n" t)))
 
-(setq company-sonic-pi-dict (read-lines company-sonic-pi-dict))
-
-(defun company-sonic-pi-prefix (regexp)
-  "Returns the prefix for matching given REGEXP."
+(defun company-sonic-pi-prefix (regexp expression)
+  "Returns the prefix for matching given REGEXP, EXPRESSION is a Number,
+specifying the matched paranthesized expression."
   (let ((prefix (and (eq major-mode 'sonic-pi-mode)
-                     (when (looking-back regexp)
-                       (match-string-no-properties 1)))))
+                     (company-grab regexp expression))))
     (if prefix (cons prefix t) nil)))
 
 (defun company-sonic-pi-dict-candidates (prefix)
-  (all-completions prefix company-sonic-pi-dict))
+  "Completes PREFIX with expressions in a 'company-sonic-pi-dict'"
+  (all-completions prefix company-sonic-pi-dict-list))
 
 (defun company-sonic-pi-sample-candidate (prefix)
-  (setq datei-liste '())
-  (dolist
-      (sample
-       (file-name-all-completions prefix (format "%setc/samples" sonic-pi-path))
-       datei-liste)
-    (add-to-list 'datei-liste
-                 (replace-regexp-in-string "\\.[a-z]+" "" (format "%s" sample)))))
+  "Completes PREFIX with the names of files in Sonic-Pis default sample
+directory. Cuts the file extension and dotfiles."
+  (let (datei-liste '())
+    (dolist
+        (sample
+         (file-name-all-completions prefix
+                                    (format "%setc/samples" sonic-pi-path))
+         datei-liste)
+      (add-to-list 'datei-liste
+                   (replace-regexp-in-string "\\.[a-z]+"
+                                             ""
+                                             (format "%s" sample))))))
 
 ;;;###autoload
 (defun company-sonic-pi-backend (command &optional arg &rest ignored)
-  "company sonic pi backend"
+  "company sonic pi backend. Does currently not recognise prefixes with a
+leading colon"
   (interactive (list 'interactive))
   (case command
     (interactive (company-begin-backend 'company-sonic-pi-backend))
     (prefix (and (eq major-mode 'sonic-pi-mode)
+                 ;; TODO Use company-sonic-prefix instead of grab-symbol
                  (company-grab-symbol)))
     (candidates (company-sonic-pi-dict-candidates arg))))
 
@@ -79,7 +88,7 @@
   (interactive (list 'interactive))
   (case command
     (interactive (company-begin-backend 'company-sonic-pi-sample-backend))
-    (prefix (company-sonic-pi-prefix "sample[[:space:]]+:\\([a-z_]*\\)"))
+    (prefix (company-sonic-pi-prefix "sample[[:space:]]+:\\([a-z_]*\\)" 1))
     (candidates (company-sonic-pi-sample-candidate arg))))
 
 (provide 'company-sonic-pi)
