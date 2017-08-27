@@ -1,6 +1,6 @@
 ;;; company-sonic-pi.el --- Auto Completion For Sonic Pi
 
-;; Copyright (C) 2011 Free Software Foundation, Inc.
+;; Copyright (C) 2017 Lukas Wöll
 
 ;; Author: Lukas Wöll <lukas.woell@protonmail.com>
 ;; Version: 1.0
@@ -36,7 +36,7 @@
 (defvar company-sonic-pi-dict "~/.spacemacs.d/layers/sonic-pi/dic"
   "File with sonic pi words")
 
-(defvar company-sonic-pi-dict-list (read-lines company-sonic-pi-dict-file)
+(defvar company-sonic-pi-dict-list (read-lines company-sonic-pi-dict)
   "List the expressions found in 'company-sonic-pi-dict'")
 
 (defun read-lines (filePath)
