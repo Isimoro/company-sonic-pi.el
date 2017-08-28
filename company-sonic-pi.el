@@ -158,7 +158,8 @@ leading colon"
   (interactive (list 'interactive))
   (case command
     (interactive (company-begin-backend 'company-sonic-pi-backend))
-    (prefix (company-sonic-pi-prefix "[[:space:]]+\\([a-zA-Z_:-]+\\)" 1))
+    (prefix (company-sonic-pi-prefix
+             "\\([[:space:]]\\|^\\)\\([a-zA-Z_:-]+\\)" 2))
     (candidates (company-sonic-pi-dict-candidates arg))))
 
 ;;;###autoload
@@ -190,6 +191,9 @@ leading colon"
 
 ;; Next thing TODO: proper autocompletion for parameters. Probably using
 ;; yasnippet before I'll try to replicate the way the Sonic-Pi-IDE does it.
+;; scrap that regexp for sample parameter prefixes:
+;; "sample[[:space:]]+:[a-z_0-9-]+\\([[:space:]][a-z]*:\\([[:space:]][0-9,\.]+\\)?\\)* \\([a-z]*\\)"
+
 
 (provide 'company-sonic-pi)
 
