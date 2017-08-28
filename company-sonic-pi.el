@@ -158,7 +158,7 @@ leading colon"
   (interactive (list 'interactive))
   (case command
     (interactive (company-begin-backend 'company-sonic-pi-backend))
-    (prefix (company-sonic-pi-prefix "[[:space:]]+\\([a-zA-Z_:-]\\)" 1))
+    (prefix (company-sonic-pi-prefix "[[:space:]]+\\([a-zA-Z_:-]+\\)" 1))
     (candidates (company-sonic-pi-dict-candidates arg))))
 
 ;;;###autoload
