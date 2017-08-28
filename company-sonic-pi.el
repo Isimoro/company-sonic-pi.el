@@ -158,10 +158,7 @@ leading colon"
   (interactive (list 'interactive))
   (case command
     (interactive (company-begin-backend 'company-sonic-pi-backend))
-    (prefix (and (eq major-mode 'sonic-pi-mode)
-                 ;; TODO Use company-sonic-prefix instead of grab-symbol to
-                 ;; support expressions starting with a colon
-                 (company-grab-symbol)))
+    (prefix (company-sonic-pi-prefix "[[:space:]]+\\([a-zA-Z_:-]\\)" 1))
     (candidates (company-sonic-pi-dict-candidates arg))))
 
 ;;;###autoload
@@ -183,7 +180,7 @@ leading colon"
     (candidate (company-sonic-pi-synth-candidate arg))))
 
 ;;;###autoload
-(defun company-sonic-pi-synth-backend (command &optional arg &rest ignored)
+(defun company-sonic-pi-fx-backend (command &optional arg &rest ignored)
   "company Backend for sonic-pi synths"
   (interactive (list 'interactive))
   (case command
